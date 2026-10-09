@@ -1,4 +1,4 @@
-﻿name: Build Ilot14
+name: Build Ilot14
 on: [push, workflow_dispatch]
 jobs:
   build:
@@ -6,10 +6,13 @@ jobs:
     container: devkitpro/devkita64:latest
     steps:
       - uses: actions/checkout@v4
+      - name: Show toolchain
+        run: aarch64-none-elf-g++ --version || echo "cross g++ not on PATH"
       - name: Build
         run: make
       - name: Upload NRO
         uses: actions/upload-artifact@v4
         with:
           name: Ilot14
-          path: Ilot14.nro
+          path: "*.nro"
+          if-no-files-found: error
