@@ -1,15 +1,28 @@
 name: Build Ilot14
+
 on: [push, workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    container: devkitpro/devkita64:latest
+    container:
+      image: devkitpro/devkita64:latest
     steps:
       - uses: actions/checkout@v4
-      - name: Show toolchain
-        run: aarch64-none-elf-g++ --version || echo "cross g++ not on PATH"
+
+      - name: Initialize devkit environment
+        shell: bash
+        run: |
+          source /etc/profile
+          echo "$DEVKITPRO"
+          aarch64-none-elf-g++ --version
+
       - name: Build
-        run: make
+        shell: bash
+        run: |
+          source /etc/profile
+          make
+
       - name: Upload NRO
         uses: actions/upload-artifact@v4
         with:
